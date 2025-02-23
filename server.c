@@ -58,13 +58,13 @@ int main()
     err = bind(sock, (SOCKADDR*) &sa_server, sizeof(sa_server));
     if(err != 0)
     {
-        printf("Socket binded successfully\n");
-    }
-    else
-    {
         printf("Socket binding failed\n");
         printf("Error code: %d\n", WSAGetLastError());
         return 1;
+    }
+    else
+    {
+        printf("Socket binded successfully\n");
     }
 
     /*
