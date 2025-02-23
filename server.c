@@ -20,6 +20,7 @@ int main()
     {
         printf("WSAStartup failed\n");
         printf("Error code: %d\n", WSAGetLastError());
+        WSACleanup();
         return 1;
     }
     else
@@ -34,6 +35,7 @@ int main()
     {
         printf("Socket coundn't be created\n");
         printf("Error code: %d\n", WSAGetLastError());
+        WSACleanup();
         return 1;
     }
     else
@@ -60,6 +62,7 @@ int main()
     {
         printf("Socket binding failed\n");
         printf("Error code: %d\n", WSAGetLastError());
+        WSACleanup();
         return 1;
     }
     else
@@ -67,19 +70,36 @@ int main()
         printf("Socket binded successfully\n");
     }
 
-    /*
-        int status = shutdown(sock, 2);
-        if(status != 0)
-        {
-            printf("Socket coundn't be shut down\n");
-            printf("Error code: %d\n", WSAGetLastError());
-        }
-        else
-        {
-            printf("Socket successfully shut down\n");
-        }
-    */
+    //set the socket to listen to any incoming connection requests
+    if(listen(sock, SOMAXCONN) == SOCKET_ERROR)
+    {
+        printf("Socket listening failed\n");
+        printf("Error code: %d\n", WSAGetLastError());
+        WSACleanup();
+        return 1;
+    }
+    else
+    {
+        printf("Sever successfully initialized. The socket is listening ...");
+    }
 
+    //create another socket to accept the connection
+    SOCKET acceptSock = accept(sock, NULL, NULL); //the accept function creates a new socket that represents the acctual connection between the client and the server
+    if(acceptSock == INVALID_SOCKET)
+    {
+        printf("Accept socket couldn't be created\n");
+        printf("Error code: %d\n", WSAGetLastError());
+        WSACleanup();
+        return 1;
+    }
+    else
+    {
+        printf("Accept socket created successfully\n");
+    }
+    
+    //receive data
+
+    //clean up
     WSACleanup();
    
     return 0;
