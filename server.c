@@ -7,6 +7,7 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #define PORT 8080  //need more info regarding this port
+#define BUFFER_SIZE 1024
 
 int main()
 {
@@ -97,9 +98,36 @@ int main()
         printf("Accept socket created successfully\n");
     }
     
-    //receive data
+    //receive and print the message on the screen
+    int received;
+    char message[BUFFER_SIZE];
+
+    do
+    {
+        received = recv(acceptSock, message, BUFFER_SIZE, 0);
+        if(received > 0)
+        {
+            printf("Message: %s\n", message);
+        }
+        else
+        {
+            if(received == 0)
+            {
+                printf("Connection closed\n");
+            }
+            else
+            {
+                printf("An error receiving the message occured\n");
+                printf("Error code: %d\n", WSAGetLastError());
+                WSACleanup();
+                return 1;
+            }
+        }
+    } while (received > 0);
 
     //clean up
+    closesocket(acceptSock);
+    closesocket(sock);
     WSACleanup();
    
     return 0;
